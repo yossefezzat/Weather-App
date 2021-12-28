@@ -4,14 +4,17 @@ const forecast = (latitude, longitude, location, callback) => {
     request({
         'url': url,
         json: true
-    }, (error, response) => {
+    }, (error, {
+        body
+    }) => {
         if (error) {
             callback('unable to connect weather service', undefined)
-        } else if (response.body.error) {
+        } else if (body.error) {
             callback('unable to find location', undefined)
         } else {
             callback(undefined, {
-                weather: response.body.daily.data[0].summary + ' It is currently ' + Math.floor(response.body.currently.temperature) + ' degree and Its ' + response.body.hourly.summary,
+                weather: body.daily.data[0].summary + ' It is currently ' + body.currently.temperature + ' degress out. This high today is ' + body.daily.data[0].temperatureHigh +
+                    ' with a low of ' + body.daily.data[0].temperatureLow + '. There is a ' + body.currently.precipProbability + '% chance of rain.',
                 location: location
             })
 
